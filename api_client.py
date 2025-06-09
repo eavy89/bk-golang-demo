@@ -65,4 +65,4 @@ def client_workflow(username, password, need_register=False):
 
 
 
-client_workflow("ivan2", "1234", True)
+client_workflow("ivan", "1234", False)

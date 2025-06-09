@@ -21,6 +21,9 @@ func (uh *UserHandler) Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
 		return
 	}
+
+	// TODO: We need to check id the user already exists...
+
 	if err := uh.service.Register(req.Username, req.Password); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -6,9 +6,9 @@
 - JWT
 - REST API
 
-### To start the project you just need to execute the command:
+### Deployment:
 ```
-    ./run_app.sh
+    docker compose up --build
 ```
 
 ### Enabled Endpoints:

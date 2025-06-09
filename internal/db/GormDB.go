@@ -2,8 +2,11 @@ package db
 
 import (
 	"backend-go-demo/internal/model"
+	"fmt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -41,13 +44,18 @@ func (g *GormDB) Close() error {
 }
 
 func NewGormDB(path string) (*GormDB, error) {
+	// Ensure the folder exists
+	if err := os.MkdirAll(filepath.Dir(path), os.ModePerm); err != nil {
+		return nil, fmt.Errorf("failed to create db directory: %w", err)
+	}
+
 	conn, err := gorm.Open(sqlite.Open(path), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to open db: %w", err)
 	}
 
 	if err := conn.AutoMigrate(&model.User{}, &model.Purchase{}); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("migration failed: %w", err)
 	}
 
 	return &GormDB{conn: conn}, nil

@@ -1,11 +1,11 @@
 # ---------- Stage 1: Build ----------
 FROM golang:1.24-alpine AS builder
 
-# Install git (needed for go get) and ca-certificates
-RUN apk add --no-cache git ca-certificates && update-ca-certificates
+# Install git, ca-certificates, and build dependencies (gcc, musl-dev)
+RUN apk add --no-cache git ca-certificates gcc musl-dev && update-ca-certificates
 
 # Set necessary environment variables
-ENV CGO_ENABLED=0 \
+ENV CGO_ENABLED=1 \
     GOOS=linux \
     GOARCH=amd64
 
@@ -19,23 +19,33 @@ RUN go mod download
 COPY . .
 
 # Build the binary with additional security flags
-RUN go build -ldflags="-w -s" -o server ./cmd/server
+RUN go build -ldflags="-w -s" -o server ./src/app
 
 
 # ---------- Stage 2: Runtime ----------
 FROM alpine:latest
 
-# Create a non-root user and group
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Install SQLite dependencies
+RUN apk add --no-cache libc6-compat
 
-# Copy binary from builder
-COPY --from=builder /app/server /server
+# Create directory structure with correct permissions
+RUN mkdir -p /app/data && \
+    addgroup -S -g 1000 appgroup && \
+    adduser -S -u 1000 -G appgroup appuser && \
+    chown -R 1000:1000 /app
+
+WORKDIR /app
+
+# Copy binary and envirnments from builder
+COPY --from=builder /app/server /app/server
+COPY .env /app/.env
+RUN chown appuser:appgroup /app/server /app/.env
 
 # Run as non-root
-USER appuser
+#USER 1000
 
 # Expose the port your app runs on (adjust if different)
 EXPOSE 8080
 
 # Run the binary
-ENTRYPOINT ["/server"]
+ENTRYPOINT ["/app/server"]

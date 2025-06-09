@@ -1,18 +1,21 @@
 package main
 
 import (
+	"backend-go-demo/internal/config"
 	"backend-go-demo/internal/db"
 	"backend-go-demo/internal/handler"
 	"backend-go-demo/internal/middleware"
 	"backend-go-demo/internal/repository"
 	"backend-go-demo/internal/service"
-
 	"github.com/gin-gonic/gin"
+	"log"
 )
 
 func main() {
-	//database, _ := db.NewSQLiteDB("users.db")
-	database, _ := db.NewGormDB("demo.db")
+	database, err := db.NewGormDB(config.GetDBPath())
+	if err != nil {
+		log.Fatalf("failed to connect database: %v", err)
+	}
 	defer database.Close()
 
 	userRepo := repository.NewUserRepository(database)

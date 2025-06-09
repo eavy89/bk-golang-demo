@@ -42,7 +42,7 @@ func (as *AuthService) Login(username, password string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(config.JWT_KEY)
+	return token.SignedString(config.GetJWTKey())
 }
 
 func NewAuthService(repo *repository.UserRepository) *AuthService {

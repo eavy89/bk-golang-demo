@@ -1,0 +1,11 @@
+services:
+  gin-app:
+    build: .
+    container_name: gin-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data  # Bind mount instead of named volume
+    env_file:
+      - .env
+    restart: unless-stopped
