@@ -1,8 +1,7 @@
 package config
 
 import (
-	"fmt"
-	"github.com/joho/godotenv"
+	"os"
 )
 
 const (
@@ -10,18 +9,41 @@ const (
 	ClaimUsername = "username"
 
 	EnvFile = "/app/.env"
+
+	JWT_SECRET_KEY = "JWT_SECRET_KEY"
+	DB_PATH        = "DB_PATH"
+	SERVER_PORT    = "SERVER_PORT"
+	POD_NAME       = "POD_NAME"
 )
 
 func GetJWTKey() []byte {
-	envFile, _ := godotenv.Read(EnvFile) // we can load this file in memory
-	value := envFile["JWT_SECRET_KEY"]
+	//envFile, _ := godotenv.Read(EnvFile) // we can load this file in memory
+	//value := envFile["JWT_SECRET_KEY"]
 
-	fmt.Println("JWT_SECRET_KEY: ", value)
+	value := os.Getenv(JWT_SECRET_KEY)
 	return []byte(value)
 }
 
 func GetDBPath() string {
-	envFile, _ := godotenv.Read(EnvFile) // we can load this file in memory
-	value := envFile["DB_PATH"]
+	//envFile, _ := godotenv.Read(EnvFile) // we can load this file in memory
+	//value := envFile["DB_PATH"]
+
+	value := os.Getenv(DB_PATH)
 	return value
+}
+
+func GetServerPort() string {
+	value := os.Getenv(SERVER_PORT)
+	if value == "" {
+		value = ":8080"
+	}
+	return ":" + value
+}
+
+func GetLogFilename() string {
+	value := os.Getenv(POD_NAME)
+	if value == "" {
+		value = "00"
+	}
+	return "data/log-" + value + ".log"
 }

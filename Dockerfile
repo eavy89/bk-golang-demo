@@ -41,9 +41,6 @@ COPY --from=builder /app/server /app/server
 COPY .env /app/.env
 RUN chown appuser:appgroup /app/server /app/.env
 
-# Run as non-root
-#USER 1000
-
 # Expose the port your app runs on (adjust if different)
 EXPOSE 8080
 

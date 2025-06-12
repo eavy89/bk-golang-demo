@@ -5,8 +5,8 @@ go 1.24.3
 require (
 	github.com/gin-gonic/gin v1.10.1
 	github.com/golang-jwt/jwt/v5 v5.2.2
-	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-sqlite3 v1.14.28
+	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.38.0
 	gorm.io/driver/sqlite v1.5.7
 	gorm.io/gorm v1.30.0
@@ -33,6 +33,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/arch v0.17.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
