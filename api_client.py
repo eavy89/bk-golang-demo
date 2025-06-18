@@ -11,7 +11,7 @@ def register_user(username, password):
         json={"username": username, "password": password},
         headers=HEADERS
     )
-    print("Register: Status code -", res.status_code, res.json())
+    # print("Register: Status code -", res.status_code, res.json())
 
 def login_user(username, password):
     res = requests.post(
@@ -19,7 +19,7 @@ def login_user(username, password):
         json={"username": username, "password": password},
         headers=HEADERS
     )
-    print("Login: Status code - ", res.status_code, res.json())
+    # print("Login: Status code - ", res.status_code, res.json())
     if res.status_code == 200 and "token" in res.json():
         return res.json()["token"]
     return None
@@ -34,7 +34,7 @@ def buy_product(token, item, quantity, price):
         json={"item": item, "quantity": quantity, "price": price},
         headers=headers
     )
-    print("Buy: Status code -", res.status_code, res.json())
+    # print("Buy: Status code -", res.status_code, res.json())
 
 def get_history(token):
     headers = {
@@ -45,9 +45,9 @@ def get_history(token):
         f"{BASE_URL}/api/purchases",
         headers=headers
     )
-    print("History: Status code -", res.status_code)
-    for purchase in res.json():
-        print(purchase)
+    # print("History: Status code -", res.status_code)
+    # for purchase in res.json():
+    #     print(purchase)
 
 ## ======= Client Workflow ======= ##
 
@@ -64,5 +64,5 @@ def client_workflow(username, password, need_register=False):
         print("Login failed")
 
 
-
-client_workflow("ivan", "1234", False)
+for i in range(300):
+    client_workflow("ivan", "1234", False)

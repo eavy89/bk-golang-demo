@@ -25,6 +25,9 @@ func main() {
 	}
 	defer database.Close()
 
+	// Initialize Prometheus metrics
+	promMetrics := middleware.NewMetrics()
+
 	userRepo := repository.NewUserRepository(database)
 	authService := service.NewAuthService(userRepo)
 	userHandler := handler.NewUserHandler(authService)
@@ -36,6 +39,12 @@ func main() {
 	log.Info(context.Background(), "Purchases handler created")
 
 	r := gin.Default()
+
+	// Prometheus configs
+	r.Use(promMetrics.Handler())                    // Add Prometheus middleware to track requests
+	r.GET("/metrics", promMetrics.MetricsHandler()) // Add /metrics endpoint
+
+	// Backend Rest Api
 	r.POST("/login", userHandler.Login)
 	r.POST("/register", userHandler.Register)
 	log.Info(context.Background(), "Public routes created")
