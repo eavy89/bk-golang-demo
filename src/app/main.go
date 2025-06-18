@@ -6,6 +6,7 @@ import (
 	"backend-go-demo/internal/handler"
 	"backend-go-demo/internal/logger"
 	"backend-go-demo/internal/middleware"
+	"backend-go-demo/internal/middleware/prometheus"
 	"backend-go-demo/internal/repository"
 	"backend-go-demo/internal/service"
 	"context"
@@ -26,7 +27,8 @@ func main() {
 	defer database.Close()
 
 	// Initialize Prometheus metrics
-	promMetrics := middleware.NewMetrics()
+	metrics := prometheus.NewMetrics()
+	metricsHandler := handler.NewMetricsHandler(metrics)
 
 	userRepo := repository.NewUserRepository(database)
 	authService := service.NewAuthService(userRepo)
@@ -41,8 +43,8 @@ func main() {
 	r := gin.Default()
 
 	// Prometheus configs
-	r.Use(promMetrics.Handler())                    // Add Prometheus middleware to track requests
-	r.GET("/metrics", promMetrics.MetricsHandler()) // Add /metrics endpoint
+	r.Use(metrics.Middleware())                // Add Prometheus middleware to track requests
+	r.GET("/metrics", metricsHandler.Handle()) // Add /metrics endpoint
 
 	// Backend Rest Api
 	r.POST("/login", userHandler.Login)
