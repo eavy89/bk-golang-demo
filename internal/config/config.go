@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -16,12 +17,15 @@ const (
 	POD_NAME       = "POD_NAME"
 )
 
-func GetJWTKey() []byte {
+func GetJWTKey() ([]byte, error) {
 	//envFile, _ := godotenv.Read(EnvFile) // we can load this file in memory
 	//value := envFile["JWT_SECRET_KEY"]
 
 	value := os.Getenv(JWT_SECRET_KEY)
-	return []byte(value)
+	if value == "" {
+		return nil, fmt.Errorf("JWT_SECRET_KEY environment variable not set")
+	}
+	return []byte(value), nil
 }
 
 func GetDBPath() string {

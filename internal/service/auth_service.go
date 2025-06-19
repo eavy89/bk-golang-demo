@@ -2,7 +2,9 @@ package service
 
 import (
 	"backend-go-demo/internal/config"
+	"backend-go-demo/internal/logger"
 	jwtModel "backend-go-demo/internal/middleware"
+	"context"
 	"errors"
 	"time"
 
@@ -25,6 +27,8 @@ func (as *AuthService) Register(username, password string) error {
 }
 
 func (as *AuthService) Login(username, password string) (string, error) {
+	log := logger.Get()
+
 	user, err := as.repo.GetUserByUsername(username)
 	if err != nil {
 		return "", err
@@ -42,7 +46,15 @@ func (as *AuthService) Login(username, password string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(config.GetJWTKey())
+	secret, err := config.GetJWTKey()
+	if err != nil {
+		log.Fatal(context.Background(), "Failed to get JWT key",
+			logger.Field{Key: "error", Value: err},
+			logger.Field{Key: "component", Value: "jwt"},
+		)
+		return "", err
+	}
+	return token.SignedString(secret)
 }
 
 func NewAuthService(repo *repository.UserRepository) *AuthService {

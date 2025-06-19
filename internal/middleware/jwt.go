@@ -12,7 +12,7 @@ import (
 
 func parseToken(tokenStr string) (*JWTData, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &JWTData{}, func(token *jwt.Token) (interface{}, error) {
-		return config.GetJWTKey(), nil
+		return config.GetJWTKey()
 	})
 	if err != nil {
 		return nil, err

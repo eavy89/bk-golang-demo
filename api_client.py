@@ -56,6 +56,7 @@ def client_workflow(username, password, need_register=False):
         register_user(username, password)
 
     token = login_user(username, password)
+    print(f"Token: {token}")
     if token:
         buy_product(token, "item1", 1, 10.99)
         buy_product(token, "item2", 2, 20)
@@ -64,5 +65,5 @@ def client_workflow(username, password, need_register=False):
         print("Login failed")
 
 
-for i in range(300):
+for i in range(3):
     client_workflow("ivan", "1234", False)

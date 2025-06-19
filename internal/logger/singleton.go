@@ -15,7 +15,7 @@ var (
 func Init(config LogConfig) error {
 	var err error
 	once.Do(func() {
-		instance, err = New(config)
+		instance, err = New(config) // by changing the instance we can change the logger implementation
 	})
 	return err
 }
